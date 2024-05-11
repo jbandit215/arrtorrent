@@ -1,0 +1,104 @@
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+qBittorrent/Prowlarr/Lidarr
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+How to set it all up:
+~~~~~~~~~~~~~~~~~~~~~
+
+Docker Set Up:
+~~~~~~~~~~~~~~
+
+1. Open the docker-compose.yml file.
+
+2. Under Services > qbittorrent > volumes change the Downloads path to your Downloads folder.  This is where your torrent files will go.
+
+3. Under Services > lidarr > volumes change the Music path to point to your Music directory.
+
+4. On the next line change your Downloads path to the same as step 2.  The Downloads folder will act as a staging area for your Music.  Once the download is complete it will be moved to the Music directory.  The torrent will remain in the Downloads folder.
+
+5. In the same directory as the docker-compose file, run the command:
+	docker compose up -d
+
+6. Wait for Docker to pull the images and run the containers.
+
+
+qBittorrent:
+~~~~~~~~~~~~
+
+1. Retrieve the username and temporary password for qBittorrent by running the command:
+	docker logs qbittorrent | grep admin
+
+2. Access qBittorrent in a browser at localhost:8080.
+
+
+Lidarr:
+~~~~~~~
+
+1. In your browser go to localhost:8686.
+
+2. Enter the information asking you to create credentials.
+
+3. On the left go to Settings > Download Clients.
+
+4. Click the + to add a new client and choose qBittorrent.
+
+5. Enter your credentials for qBittorrent in the Username and Password fields.
+
+6. If you click Test and it fails, you may need to substitute the IP address of the container for the Host instead of localhost.  You can find this out by running the command:
+	docker ps
+Then copy the id of the qbittorrent container and run the command:
+	docker inspect <container id> | grep IPAddress
+
+7. Test and Save.
+
+
+Prowlarr:
+~~~~~~~~~
+
+1. Access Prowlarr in a browser at localhost:9696.
+
+2. Go to Settings > Apps.
+
+3. Under Applications click +.
+
+4. Add Lidarr.
+
+5. If you need to substitute the container IP addresses for localhost in the Prowlarr Server and Lidarr Server fields you can find those addresses the same way you found the qBittorrent address.
+
+6. In the Lidarr app, under Settings > General copy the API Key and paste into the API Key field in Prowlarr.
+
+7. Under Settings > Download Clients add qBittorrent by repeating the corresponding steps in the previous section.
+
+8. Under the Indexers Section add your favorite trackers.
+
+
+HAVE PHUN!
+
+
+                                      ,&@#                                      
+                               @@@@@@@@@@@@@@@@@                                
+                             @@@@@@@@@@@@@@@@@@@@@                              
+                            @@ @@@@@@@@@@@@@@@@@@@@@                            
+@&                         @@@@@@@@@@@@@@@@@@@@@@@@@&                          @
+ @@                       ,@@.@@@@@@@@@@@@@@@@@@@@@@@                         @@
+ %@@@                     ,@ @@      @@@@@      @@ @@                       @@@,
+   @@@@                    @ @@      /@@@@      @@.@@                     @@@@  
+    @@@@@                    @@@   /@@&  @@@#   @@@                    /@@@ @   
+      @@@@@@                @@@@@@@@@@    @@@@@@@@@@                 @@@@ @     
+       (@@@@@@                    @@@@@@@(@@@@@                   .@@@@ @       
+          @@@@@@@             @@@ &@@@@@@@@@@( @@               @@@@@.@         
+            @@@@@@@@           @@ .@@@ @ @ @@ (@@           .@@@@@(@@           
+               @@@@@*@@#       @@@ &@ @@@@ @  @@         @@@ @@@@@              
+                 *@@@@% @@@      @@@@@@@@@@@@@@      /@@@ @@@@@                 
+                     @@@@@ @@@@/   &@@@@@@@@     @@@@@ @@@@@                    
+                        @@@@@@ @@@@@.       &@@@@@ @@@@@(                       
+                            @@@@@@*/@@@@@@ @@ @@@@@@/                           
+              @@@@@@@            @@@@@@/ @@@@@@@           (@@@@@@              
+              ,@@@ @@@@  @@@@@@@, *@@ @@@@@@@@  @@@@@@@@  @@@& @@@              
+       &@@ ,@@,@@ @.@@@@@@ (@@@@@@@@.       @@@@@@@@@  @@@@@ @@%@@ @@ (@@       
+      @@@@@ @@@(@@@@@@@@@ @@@                      (@@@ @@@ @@@@@@@@@@@@@@@     
+      @@@  ,  #&&&#/. @@@                               @@, ,#%&&%, @  @@@      
+                       @@@ @@                      @@@&@@@                      
+                        @@@@@*                     @@@@@@ 
+
+Credits: Docker images created and maintained by linuxserver.io, Docker Compose file and nfo compiled by jbandit                      
